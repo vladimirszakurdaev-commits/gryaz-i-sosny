@@ -121,6 +121,15 @@ figure{margin:0;display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;
 figure img{border-radius:50%;aspect-ratio:1;object-fit:cover;width:120px;border:3px solid var(--brass-2)}
 figcaption b{font-family:var(--display);font-size:23px;display:block}
 figcaption{font-size:14.5px;color:var(--muted)}
+/* travel */
+.travel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:36px;margin-top:44px;padding-top:30px;border-top:1px solid var(--line)}
+@media (max-width:760px){.travel{grid-template-columns:minmax(0,1fr)}}
+.travel p{color:var(--muted);font-size:15.5px;margin:8px 0 0;max-width:60ch}
+.dist{border-collapse:collapse;margin-top:12px;font-size:15.5px;width:100%;max-width:420px}
+.dist td{padding:7px 0;border-bottom:1px solid var(--line)}
+.dist td:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.cta{display:inline-block;margin-top:16px;background:var(--pine);color:var(--pine-ink);text-decoration:none;font-weight:600;font-size:15px;border-radius:99px;padding:11px 22px}
+.cta:hover{filter:brightness(1.15)}
 /* included */
 .incl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 30px;margin-top:36px}
 @media (max-width:760px){.incl{grid-template-columns:minmax(0,1fr)}}
@@ -181,6 +190,24 @@ footer{padding-block:26px;font-size:12.5px;color:var(--muted)}
       <div class="v">30–35 <small>тыс. ₽</small></div>
       <p>за участника: ночь в усадьбе и день на маршруте. «Сосновый уикенд» на два дня — по запросу.</p>
       <ul><li>Группа от 6 экипажей</li><li>Максимум — по свободным местам в усадьбе</li><li>Входят проживание, завтрак, обед на трассе, гиды, машина сопровождения и страховка</li><li>Бензин, доставка своей техники, ужин, баня и SPA — отдельно</li></ul>
+    </div>
+  </div>
+  <div class="travel">
+    <div>
+      <h3>Как добраться</h3>
+      <p>Усадьба «Жемчужная» стоит в Заволжье, на левом берегу Волги напротив Чебоксар. Ориентиры по дороге на машине с прицепом:</p>
+      <table class="dist"><tbody>
+        <tr><td>Йошкар-Ола</td><td>около 100 км</td></tr>
+        <tr><td>Казань</td><td>около 150 км</td></tr>
+        <tr><td>Нижний Новгород</td><td>около 250 км</td></tr>
+        <tr><td>Москва</td><td>около 650 км по М-12</td></tr>
+      </tbody></table>
+      <p>Где оставить машину с прицепом и разгрузить квадроциклы, расскажем при бронировании.</p>
+    </div>
+    <div>
+      <h3>Даты</h3>
+      <p>Все даты сейчас свободны: выберите удобные и позвоните нам. Проще всего с местами в усадьбе с понедельника по четверг, на пятницу и субботу бронируйте заранее.</p>
+      <a class="cta" href="#contacts">Выбрать даты</a>
     </div>
   </div>
 </div></section>
