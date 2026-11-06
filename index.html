@@ -122,6 +122,14 @@ figure img{border-radius:50%;aspect-ratio:1;object-fit:cover;width:120px;border:
 figcaption b{font-family:var(--display);font-size:23px;display:block}
 figcaption{font-size:14.5px;color:var(--muted)}
 [hidden]{display:none!important}
+.book{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;display:grid;gap:14px;max-width:760px}
+.book h3{font-size:26px}
+.book .cnote{margin:0}
+.book .cta{border:0;cursor:pointer;font:inherit;font-weight:600}
+.book .cta:disabled{opacity:.6;cursor:default}
+.brow{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.bmsg{font-size:14.5px;color:var(--muted)}
+.cout button.cta{border:0;cursor:pointer;font:inherit;font-weight:600}
 /* calc */
 .calc{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:34px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);overflow:hidden}
 @media (max-width:860px){.calc{grid-template-columns:minmax(0,1fr)}}
@@ -300,6 +308,17 @@ footer{padding-block:26px;font-size:12.5px;color:var(--muted)}
     </div>
     <div class="cout" aria-live="polite" id="c-out"></div>
   </div>
+  <form class="book" id="c-book" hidden novalidate>
+    <h3>Заявка на бронирование</h3>
+    <p class="cnote" id="b-sum"></p>
+    <div class="row2">
+      <label class="fld"><b>Имя</b><input id="b-name" name="name" autocomplete="name" required></label>
+      <label class="fld"><b>Телефон</b><input id="b-phone" name="phone" type="tel" autocomplete="tel" required placeholder="+7"></label>
+    </div>
+    <label class="fld"><b>Комментарий</b><input id="b-note" name="note" placeholder="Например, удобное время для звонка"></label>
+    <label class="chk"><input type="checkbox" id="b-ok" required><span>Согласен на обработку персональных данных для связи по заявке</span></label>
+    <div class="brow"><button class="cta" type="submit" id="b-send">Отправить заявку</button><span class="bmsg" id="b-msg" role="status"></span></div>
+  </form>
 </div></section>
 
 <section style="padding-top:0"><div class="in">
@@ -391,6 +410,25 @@ function rent(){
   const lines=[[`Квадроциклы с водителем × ${A}`,A*pq]]; if(P) lines.push([`Пассажиры × ${P}`,P*pp]); if(night) lines.push(['Ужин и завтрак в усадьбе',nightRev]);
   return {ok:res>0, big:rev, unit:'за группу', total:rev, sub:`${L?'Большой день, около 9 часов':'Лесная петля, около 4 часов'} · ${n} ${n===1?'человек':(n<5?'человека':'человек')}`+(night?' · проживание оплачивается усадьбе отдельно':''), lines};
 }
+let LAST=null;
+function fillSum(){ if(LAST) $('b-sum').textContent=`${LAST.date} · ${LAST.mode} · ${LAST.params} · итого ${LAST.total}`; }
+function openBook(){ fillSum(); const f=$('c-book'); f.hidden=false; $('b-msg').textContent=''; f.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('b-name').focus(),300); }
+$('c-book').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=$('b-name').value.trim(), phone=$('b-phone').value.trim(), m=$('b-msg');
+  if(!name||phone.replace(/\D/g,'').length<10){m.textContent='Укажите имя и телефон.';return}
+  if(!$('b-ok').checked){m.textContent='Отметьте согласие на обработку данных.';return}
+  if(!LAST){m.textContent='Сначала выберите дату и параметры.';return}
+  const btn=$('b-send'); btn.disabled=true; m.textContent='Отправляем…';
+  try{
+    const r=await fetch('https://formsubmit.co/ajax/busygin2005@ya.ru',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({_subject:'Бронь с сайта: '+LAST.date+', '+name,_template:'table',
+        'Имя':name,'Телефон':phone,'Комментарий':$('b-note').value.trim()||'—','Дата':LAST.date,'Формат':LAST.mode,'Параметры':LAST.params,'Расчёт':LAST.lines,'Итого':LAST.total})});
+    if(!r.ok) throw 0;
+    m.textContent='Заявка отправлена. Антон перезвонит вам, чтобы подтвердить бронь.'; $('c-book').reset();
+  }catch(_){ m.textContent='Не удалось отправить. Позвоните: +7 (906) 381-29-41 или +7 (917) 078-14-30.' }
+  btn.disabled=false;
+});
 function render(){
   const mode=document.querySelector('input[name=mode]:checked').value;
   $('p-tour').hidden=mode!=='tour'; $('p-rent').hidden=mode!=='rent';
@@ -400,7 +438,10 @@ function render(){
   const r=mode==='tour'?tour():rent();
   if(!r.ok){o.innerHTML='<div class="k">'+new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+'</div><div class="busy">Простите, данная дата уже занята</div><div class="sub">Выберите другую дату или позвоните нам — подберём вариант.</div><a class="cta" href="#contacts">Связаться</a>';return}
   o.innerHTML=`<div class="k">${new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}</div><div class="big">${r.big.toLocaleString('ru-RU')} <small>₽</small></div><div class="sub">${r.unit} · ${r.sub}</div>`+
-   `<div class="lines">${r.lines.map(([k,v])=>`<div><span>${k}</span><span>${rub(v)}</span></div>`).join('')}<div style="font-weight:600"><span>Итого</span><span>${rub(r.total)}</span></div></div><a class="cta" href="#contacts">Забронировать</a>`;
+   `<div class="lines">${r.lines.map(([k,v])=>`<div><span>${k}</span><span>${rub(v)}</span></div>`).join('')}<div style="font-weight:600"><span>Итого</span><span>${rub(r.total)}</span></div></div><button class="cta" type="button" id="c-bookbtn">Забронировать</button>`;
+  LAST={date:new Date(d.value).toLocaleDateString('ru-RU'),mode:mode==='tour'?'Тур с проживанием, своя техника':'Прокат с гидом',params:r.sub,lines:r.lines.map(([k,v])=>k+': '+rub(v)).join('; '),total:rub(r.total)};
+  $('c-bookbtn').onclick=openBook;
+  if(!$('c-book').hidden) fillSum();
 }
 document.querySelectorAll('#calc input,#calc select').forEach(e=>{e.addEventListener('input',render);e.addEventListener('change',render)});
 $('c-crews').addEventListener('change',()=>{if(+$('c-people').value<+$('c-crews').value)$('c-people').value=$('c-crews').value;render()});
