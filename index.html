@@ -121,6 +121,35 @@ figure{margin:0;display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;
 figure img{border-radius:50%;aspect-ratio:1;object-fit:cover;width:120px;border:3px solid var(--brass-2)}
 figcaption b{font-family:var(--display);font-size:23px;display:block}
 figcaption{font-size:14.5px;color:var(--muted)}
+[hidden]{display:none!important}
+/* calc */
+.calc{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:34px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);overflow:hidden}
+@media (max-width:860px){.calc{grid-template-columns:minmax(0,1fr)}}
+.cin{padding:24px 26px;display:grid;gap:18px;min-width:0}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:14.5px;background:var(--paper)}
+.seg input:checked+span{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.seg input:focus-visible+span{outline:2px solid var(--brass);outline-offset:2px}
+.fld{display:grid;gap:6px;font-size:13.5px;color:var(--muted)}
+.fld b{color:var(--ink);font-weight:600;font-size:14px}
+.row2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.fld input,.fld select{font:inherit;font-size:15px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;min-width:0}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 3px color-mix(in srgb,var(--brass) 25%,transparent)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;cursor:pointer}
+.chk input{margin-top:3px;accent-color:var(--pine)}
+.cout{background:var(--pine);color:var(--pine-ink);padding:26px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cout .k{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-2);font-weight:600}
+.cout .big{font-family:var(--display);font-weight:700;font-size:clamp(40px,5vw,54px);line-height:1;color:var(--brass-2)}
+.cout .big small{font-size:20px}
+.cout .sub{font-size:14.5px;color:color-mix(in srgb,var(--pine-ink) 80%,transparent)}
+.cout .lines{display:grid;gap:6px;font-size:14px;border-top:1px solid color-mix(in srgb,var(--brass-2) 35%,transparent);padding-top:12px;margin-top:4px}
+.cout .lines div{display:flex;justify-content:space-between;gap:10px}
+.cout .lines span:last-child{white-space:nowrap}
+.cout .busy{font-family:var(--display);font-size:26px;line-height:1.15;color:var(--pine-ink)}
+.cout .cta{background:var(--brass-2);color:#1b2a22;align-self:flex-start;margin-top:auto}
+.cnote{font-size:12.5px;color:var(--muted)}
 /* travel */
 .travel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:36px;margin-top:44px;padding-top:30px;border-top:1px solid var(--line)}
 @media (max-width:760px){.travel{grid-template-columns:minmax(0,1fr)}}
@@ -153,7 +182,7 @@ footer{padding-block:26px;font-size:12.5px;color:var(--muted)}
 
 </head><body><header class="top"><div class="in">
   <a class="brand" href="#top">Грязь и сосны</a>
-  <nav aria-label="Разделы"><a href="#tury">Туры с проживанием</a><a href="#local">Прокат и тимбилдинг</a><a href="#places">Места</a><a href="#contacts">Контакты</a></nav>
+  <nav aria-label="Разделы"><a href="#tury">Туры с проживанием</a><a href="#local">Прокат и тимбилдинг</a><a href="#calc">Стоимость</a><a href="#places">Места</a><a href="#contacts">Контакты</a></nav>
   <a class="call" href="#contacts">Связаться</a>
 </div></header>
 
@@ -231,6 +260,48 @@ footer{padding-block:26px;font-size:12.5px;color:var(--muted)}
   </div>
 </div></section>
 
+<section id="calc" style="padding-top:0"><div class="in">
+  <div class="eyebrow">Стоимость</div><h2>Рассчитайте <em>свою поездку</em></h2>
+  <div class="calc">
+    <div class="cin">
+      <div class="seg" role="radiogroup" aria-label="Формат">
+        <label><input type="radio" name="mode" value="tour" checked><span>Тур с проживанием, своя техника</span></label>
+        <label><input type="radio" name="mode" value="rent"><span>Прокат с гидом</span></label>
+      </div>
+      <div class="row2">
+        <label class="fld"><b>Дата</b><input type="date" id="c-date"></label>
+      </div>
+      <div id="p-tour" class="cin" style="padding:0">
+        <div class="row2">
+          <label class="fld"><b>Экипажей</b><input type="number" id="c-crews" min="6" max="40" value="6"></label>
+          <label class="fld"><b>Участников</b><input type="number" id="c-people" min="6" max="80" value="12"></label>
+          <label class="fld"><b>Формат</b><select id="c-days"><option value="1">1 день, 1 ночь</option><option value="2">Сосновый уикенд, 2 дня</option></select></label>
+        </div>
+        <div class="row2">
+          <label class="fld"><b>Проживание</b><select id="c-acc">
+            <option value="std">Номер «Стандарт», по 2 человека</option><option value="pl">Номер «Полулюкс», по 2</option><option value="lux">Номер «Люкс», по 2</option><option value="vip">Номер VIP-люкс, по 2</option><option value="apt">Апартаменты, по 2</option>
+            <option value="rus">Малый дом «Русский» целиком, до 12</option><option value="big">Большой гостевой дом целиком, до 18</option></select></label>
+          <label class="fld"><b>Питание</b><select id="c-meal"><option value="bl">Завтрак и обед на трассе</option><option value="full">Полный пансион</option><option value="l">Только обед на трассе</option><option value="none">Без питания</option></select></label>
+        </div>
+      </div>
+      <div id="p-rent" class="cin" style="padding:0" hidden>
+        <div class="row2">
+          <label class="fld"><b>Маршрут</b><select id="c-route"><option value="short">Лесная петля, 4 часа</option><option value="long">Большой день, 9 часов</option></select></label>
+          <label class="fld"><b>Квадроциклов</b><input type="number" id="c-quads" min="1" max="10" value="4"></label>
+          <label class="fld"><b>Пассажиров</b><input type="number" id="c-pax" min="0" max="10" value="0"></label>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Откуда едете">
+          <label><input type="radio" name="who" value="guest" checked><span>Отдыхаю в «Жемчужной»</span></label>
+          <label><input type="radio" name="who" value="city"><span>Нужен трансфер из Чебоксар</span></label>
+        </div>
+        <label class="chk" id="c-night-w" hidden><input type="checkbox" id="c-night"><span>С ночёвкой в «Жемчужной»: ужин и завтрак — 1 500 ₽ на человека, проживание по ценам усадьбы</span></label>
+      </div>
+      <p class="cnote">Расчёт предварительный. Точную сумму подтвердим по телефону.</p>
+    </div>
+    <div class="cout" aria-live="polite" id="c-out"></div>
+  </div>
+</div></section>
+
 <section style="padding-top:0"><div class="in">
   <div class="eyebrow">Как проходит день</div><h2>От инструктажа <em>до бани</em></h2>
   <div class="day">
@@ -291,5 +362,49 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()
   catch(e){const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Выделено'}
   setTimeout(()=>b.textContent=t,1600);
 }));
+
+(function(){
+const $=id=>document.getElementById(id), rub=v=>Math.round(v).toLocaleString('ru-RU')+' ₽', up=v=>Math.ceil(v/100)*100;
+const ACC={std:[3500,0],pl:[4500,0],lux:[5500,0],vip:[8500,0],apt:[9000,0],rus:[15000,12],big:[45000,18]};
+const MEAL={full:[1250,1],bl:[850,1],l:[500,1],none:[0,0]};
+const MEALNAME={full:'Полный пансион',bl:'Завтрак и обед на трассе',l:'Обед на трассе',none:'Без питания'};
+const d=$('c-date'); const t=new Date(); t.setDate(t.getDate()+1); d.min=t.toISOString().slice(0,10);
+const int=(id,lo,hi)=>{let v=Math.round(+$(id).value||0); return Math.min(hi,Math.max(lo,v))};
+function tour(){
+  const C=int('c-crews',6,40), N=Math.max(C,int('c-people',1,80)), D=+$('c-days').value, a=ACC[$('c-acc').value], m=MEAL[$('c-meal').value];
+  const units=a[1]?Math.ceil(N/a[1]):Math.ceil(N/2), acc=units*a[0]*D, fee=D===2?47000:27500;
+  const raw=fee+acc/N+m[0]*D, pp=up(raw), feeRev=fee*N+(pp-raw)*N;
+  const cost=2*6000*D+2500*D+(m[1]?4000*D:0)+300*N*D+3500*D+3*m[0]*D;
+  const res=feeRev-cost-feeRev*0.06;
+  return {ok:res>0, big:pp, unit:'за участника', total:pp*N, sub:`${N} участников, ${C} экипажей · ${D===2?'2 дня, 2 ночи':'1 день, 1 ночь'}`,
+    lines:[['Маршрут, гиды, сопровождение',fee*N],['Проживание',acc],['Питание · '+MEALNAME[$('c-meal').value].toLowerCase(),m[0]*D*N]]};
+}
+function rent(){
+  const L=$('c-route').value==='long', A=int('c-quads',1,10), P=Math.min(int('c-pax',0,10),A), g=document.querySelector('input[name=who]:checked').value==='guest';
+  const night=!g&&$('c-night').checked, h=L?9:4;
+  const pq=L?37000:19000, pp=L?8500:5000, n=A+P;
+  let rev=A*pq+P*pp; const rentFull=h*(3000*A+500*P);
+  let cost=0.9*rentFull+500*(n+2)+5000+(g?(L?1500:500):(L?2500:1500))+300*n+(g?0.1*(rev-rentFull):0);
+  let nightRev=0; if(night){nightRev=1500*n; cost+=750*n}
+  rev+=nightRev; cost+=rev*(g?0.04:0.06);
+  const res=rev-cost;
+  const lines=[[`Квадроциклы с водителем × ${A}`,A*pq]]; if(P) lines.push([`Пассажиры × ${P}`,P*pp]); if(night) lines.push(['Ужин и завтрак в усадьбе',nightRev]);
+  return {ok:res>0, big:rev, unit:'за группу', total:rev, sub:`${L?'Большой день, около 9 часов':'Лесная петля, около 4 часов'} · ${n} ${n===1?'человек':(n<5?'человека':'человек')}`+(night?' · проживание оплачивается усадьбе отдельно':''), lines};
+}
+function render(){
+  const mode=document.querySelector('input[name=mode]:checked').value;
+  $('p-tour').hidden=mode!=='tour'; $('p-rent').hidden=mode!=='rent';
+  $('c-night-w').hidden=document.querySelector('input[name=who]:checked').value!=='city';
+  const o=$('c-out');
+  if(!d.value){o.innerHTML='<div class="k">Стоимость</div><div class="busy">Выберите дату поездки</div><div class="sub">Сумма появится сразу после выбора даты.</div>';return}
+  const r=mode==='tour'?tour():rent();
+  if(!r.ok){o.innerHTML='<div class="k">'+new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+'</div><div class="busy">Простите, данная дата уже занята</div><div class="sub">Выберите другую дату или позвоните нам — подберём вариант.</div><a class="cta" href="#contacts">Связаться</a>';return}
+  o.innerHTML=`<div class="k">${new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}</div><div class="big">${r.big.toLocaleString('ru-RU')} <small>₽</small></div><div class="sub">${r.unit} · ${r.sub}</div>`+
+   `<div class="lines">${r.lines.map(([k,v])=>`<div><span>${k}</span><span>${rub(v)}</span></div>`).join('')}<div style="font-weight:600"><span>Итого</span><span>${rub(r.total)}</span></div></div><a class="cta" href="#contacts">Забронировать</a>`;
+}
+document.querySelectorAll('#calc input,#calc select').forEach(e=>{e.addEventListener('input',render);e.addEventListener('change',render)});
+$('c-crews').addEventListener('change',()=>{if(+$('c-people').value<+$('c-crews').value)$('c-people').value=$('c-crews').value;render()});
+render();
+})();
 </script>
 </body></html>
