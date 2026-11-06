@@ -434,6 +434,7 @@ function render(){
   $('p-tour').hidden=mode!=='tour'; $('p-rent').hidden=mode!=='rent';
   $('c-night-w').hidden=document.querySelector('input[name=who]:checked').value!=='city';
   const o=$('c-out');
+  LAST=null; $('b-sum')&&($('b-sum').textContent='');
   if(!d.value){o.innerHTML='<div class="k">Стоимость</div><div class="busy">Выберите дату поездки</div><div class="sub">Сумма появится сразу после выбора даты.</div>';return}
   const r=mode==='tour'?tour():rent();
   if(!r.ok){o.innerHTML='<div class="k">'+new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+'</div><div class="busy">Простите, данная дата уже занята</div><div class="sub">Выберите другую дату или позвоните нам — подберём вариант.</div><a class="cta" href="#contacts">Связаться</a>';return}
